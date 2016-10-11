@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQeueu();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        //fetchData(sbMethod(loaderLooper));
+        //fetchData(sbMethod(loaderLooper,false));
         gate = true;
         recyclerView.setVisibility(View.GONE);
         pager.setAdapter(pageradater);
@@ -543,6 +543,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     JSONObject obj = new JSONObject(response);
                      Log.i("response", response);
                     JSONObject j = obj.getJSONObject("result");
+
+                    if(response.contains("OVER_QUERY_LIMIT")){
+                        display("OVER_QUERY_LIMIT");
+                        finish();
+                    }
                     JSONArray jar = j.getJSONArray("types");
                     JSONObject geometry = j.getJSONObject("geometry");
                     JSONObject location = geometry.getJSONObject("location");
