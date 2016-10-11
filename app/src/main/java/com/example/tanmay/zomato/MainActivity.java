@@ -912,6 +912,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+       // display("Connected to services " + connectionResult.toString());
         display("Connected to services " + connectionResult.toString());
 
     }
