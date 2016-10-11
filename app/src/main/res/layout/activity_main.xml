@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:lv="http://schemas.android.com/tools">
+<ImageView
+    android:background="@drawable/splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/splash"/>
+    <ImageView
+        android:id="@+id/tomato"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="230dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/tomato"
+        android:fitsSystemWindows="true"
+        android:cropToPadding="true"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/appbar"
+        android:layout_height="270dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            app:contentScrim="@color/colorPrimaryDark"
+            android:id="@+id/collapsingToolbar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            android:layout_height="match_parent">
+
+           <include layout="@layout/view_pager_include"/>
+
+            <android.support.v7.widget.Toolbar
+
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:id="@+id/toolbar"
+
+                app:layout_collapseMode="pin">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/popup"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_keyboard_arrow_right_white_48dp"/>
+                    <EditText
+                        android:layout_width="260dp"
+                        android:layout_height="wrap_content"
+                        android:hint="search"
+
+                        android:id="@+id/search_bar"/>
+
+                    <ImageView
+                        android:id="@+id/search_button"
+                        android:layout_gravity="center"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/search"/>
+
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CACFD2"
+    android:orientation="vertical"
+    tools:context="com.example.tanmay.zomato.MainActivity">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       >
+
+    </android.support.v7.widget.RecyclerView>
+
+<include layout="@layout/load_more"
+    />
+</LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        android:layout_gravity="bottom"
+
+        android:layout_marginBottom="70dp"
+        />
+    <include layout="@layout/card_view_toolbar"
+       />
+
+
+</android.support.design.widget.CoordinatorLayout>

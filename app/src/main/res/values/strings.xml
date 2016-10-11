@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">zomato</string>
+    <string name="title_activity_view_photo">ViewPhoto</string>
+    <string name="example_review">Zomato is the best restaur you can also order food online for delivery, with thousands of great food delivery restaurants to choose from.</string>
+</resources>

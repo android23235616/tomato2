@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:CardView="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    
+    android:layout_gravity="bottom"
+
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+    <android.support.v7.widget.CardView
+
+
+        CardView:cardElevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:background="@drawable/ripple"
+                android:id="@+id/fav_tb"
+                android:scaleType="centerInside"
+                android:layout_weight="0.25"
+                android:layout_marginLeft="10dp"
+               
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/favourite_off"/>
+            <ImageView
+                android:background="@drawable/ripple"
+                android:id="@+id/search_tb"
+                android:scaleType="centerInside"
+                android:layout_weight="0.25"
+                android:layout_marginLeft="10dp"
+               
+                android:layout_gravity="center_vertical"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/search"/>
+
+
+            <ImageView
+                android:background="@drawable/ripple"
+                android:id="@+id/radius_tb"
+                android:scaleType="centerInside"
+                android:layout_weight="0.25"
+                android:layout_marginLeft="10dp"
+               
+                android:layout_gravity="center_vertical"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/expand"/>
+
+            <ImageView
+                android:id="@+id/refresh_tb"
+                android:scaleType="centerInside"
+                android:layout_weight="0.25"
+                android:layout_marginLeft="10dp"
+               
+                android:layout_gravity="center_vertical"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ripple"
+                android:src="@drawable/ic_refresh_white_48dp"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

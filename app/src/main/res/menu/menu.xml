@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/get_more"
+        android:orderInCategory="100"
+        android:title="More Restaurants" />
+
+
+    <item
+        android:id="@+id/favouritemenu"
+        android:orderInCategory="101"
+        android:title="Favourites"/>
+
+    <item
+        android:id="@+id/radius"
+        android:orderInCategory="102"
+        android:title="Change Radius"/>
+</menu>

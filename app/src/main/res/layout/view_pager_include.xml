@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        app:layout_collapseMode="pin"
+        android:background="@drawable/background"
+        android:fitsSystemWindows="true"
+        android:id="@+id/view_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <ImageButton
+        android:fitsSystemWindows="true"
+        app:layout_collapseMode="pin"
+        android:id="@+id/right_arrow"
+        android:layout_gravity="right|center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_keyboard_arrow_right_white_48dp"/>
+
+
+    <ImageButton
+        android:fitsSystemWindows="true"
+        app:layout_collapseMode="pin"
+        android:id="@+id/left_arrow"
+
+        android:layout_gravity="left|center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/back_arrow"/>
+    />
+
+
+</FrameLayout>
