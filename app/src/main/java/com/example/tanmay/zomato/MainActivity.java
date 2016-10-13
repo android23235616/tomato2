@@ -14,14 +14,11 @@ import android.os.Handler;
 
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-
 import android.support.v4.view.ViewPager;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +36,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -53,19 +49,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.tanmay.zomato.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     double current_lat=20.3536, current_long=85.8193;
     recyclerViewAdapter adapter;
     CollapsingToolbarLayout cToolbar;
-
+    int favourite_checker=0;
     ImageView tomato, Search_button, s_tb, r_tb, f_tb, radius_tb;
 
     EditText search;
@@ -168,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQeueu();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        //fetchData(sbMethod(loaderLooper,false));
+        fetchData(sbMethod(loaderLooper,false));
         gate = true;
         recyclerView.setVisibility(View.GONE);
         pager.setAdapter(pageradater);
@@ -348,7 +345,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         f_tb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                favourites();
+                if(favourite_checker%2==0){
+                    Glide.with(context).load(R.drawable.ic_home_white_48dp).into(f_tb);
+                    favourites();
+                    r_tb.setClickable(false);
+                    radius_tb.setClickable(false);
+                }else{
+                    r_tb.setClickable(true);
+                    radius_tb.setClickable(true);
+                    Glide.with(context).load(R.drawable.favourite_off).fitCenter().into(f_tb);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    adapter = new recyclerViewAdapter(list,photoUrlList,reviewArrayList);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+                favourite_checker++;
             }
         });
 
@@ -541,7 +552,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onResponse(String response) {
                 try {
                     JSONObject obj = new JSONObject(response);
-                     Log.i("response", response);
+                   //  Log.i("response", response);
                     JSONObject j = obj.getJSONObject("result");
 
                     if(response.contains("OVER_QUERY_LIMIT")){
@@ -850,8 +861,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         page_token = getPageToken(loaderLooper);
         //}
 
-        if (gate && !(page_token.equals(""))&&trigger) {
+        if (gate && !(page_token.equals("loader"))&&trigger) {
             sb.append("&pagetoken=" + page_token);
+        }else{
+            display("No more restaurants to be displayed");
         }
         Log.d("Map", "api: " + sb.toString());
 
@@ -862,12 +875,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String page_token = "";
         if (mainObject != null) {
             if (i < 3) {
-                loaderLooper++;
+
                 try {
                     page_token = mainObject.getString("next_page_token");
                 } catch (JSONException e) {
                     page_token = "null";
+                    loaderLooper=5;
                     e.printStackTrace();
+                    return "loader";
                 }
             }
         }
@@ -917,7 +932,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-     
+
         display("Connected to services " + connectionResult.toString());
 
     }

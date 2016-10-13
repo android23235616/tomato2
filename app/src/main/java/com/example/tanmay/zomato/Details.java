@@ -119,8 +119,7 @@ public class Details extends AppCompatActivity {
             open_close.setText("CLOSED");
             open_close.setBackgroundResource(R.drawable.redshape);
         }else{
-            open_close.setText(open_closeText);
-            open_close.setBackgroundResource(R.drawable.blackshape);
+            open_close.setVisibility(View.GONE);
         }
         vicinity.setText(vicinity1);
         Glide.with(pic.getContext()).load(re.getImageUrl()).thumbnail(0.01f).override(75, 90).centerCrop().crossFade().into(pic);
@@ -140,7 +139,6 @@ public class Details extends AppCompatActivity {
             }
         });
          intent = new Intent(Intent.ACTION_CALL);
-
         reviewArrays = (reviewArray) i.getExtras().getSerializable("reviews");
         reviewAdapters = new reviewRecycler(reviewArrays.getHolder(), reviewArrays.getActual_length());
         adapter = new hotel_photos_adapter(mainPhoto.getPhotoLocation(), mainPhoto.getPhotoNumber());
@@ -174,43 +172,10 @@ public class Details extends AppCompatActivity {
                 if (reviewChecker % 2 == 0) {
                     expansion.setText("Collapse Reviews");
                     reviewsList.setVisibility(View.VISIBLE);
-                    slide_down.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            reviewsList.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    reviewsList.startAnimation(slide_down);
 
                 } else {
-                  slide_up.setAnimationListener(new Animation.AnimationListener() {
-                      @Override
-                      public void onAnimationStart(Animation animation) {
-
-                      }
-
-                      @Override
-                      public void onAnimationEnd(Animation animation) {
-                          reviewsList.setVisibility(View.GONE);
-                      }
-
-                      @Override
-                      public void onAnimationRepeat(Animation animation) {
-
-                      }
-                  });
-                    reviewsList.startAnimation(slide_up);
                     expansion.setText("Expand Reviews");
+                    reviewsList.setVisibility(View.GONE);
                 }
                 reviewChecker++;
             }
