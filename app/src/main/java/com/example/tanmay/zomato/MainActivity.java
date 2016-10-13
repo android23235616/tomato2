@@ -1,4 +1,5 @@
 package com.example.tanmay.zomato;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.Manifest;
@@ -6,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -63,6 +65,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,13 +115,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // File f;
     TextView change_location;
     ViewPager pager;
+    View buffer;
     boolean gate = false;
     ImageButton next, back;
     pagerAdapter pageradater;
     int search_checker = 1;
     JSONObject mainObject;
     static int loaderLooper = 1;
-
+    public String f_vicinity;
     AlertDialog.Builder builder;
     // TextView t;
     Toolbar tb;
@@ -128,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkForPermissions();
         handler = new Handler();
         load_more_card_view = (CardView)findViewById(R.id.load_more_card_view);
         load_more_progress_bar = (ProgressBar)findViewById(R.id.load_more_progress);
@@ -145,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         context = this;
         mainObject = null;
         tb = (Toolbar) findViewById(R.id.toolbar);
-
+         buffer = (View)findViewById(R.id.buffer);
+        buffer.setVisibility(View.GONE);
         photoUrlList = new ArrayList<>();
         local = new localdatabase();
         pageradater = new pagerAdapter(local);
@@ -175,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         bar.setIndeterminate(true);
         requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQeueu();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
+        //fetch data with current location
         fetchData(sbMethod(loaderLooper,false));
         gate = true;
         recyclerView.setVisibility(View.GONE);
@@ -229,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     search.setVisibility(View.INVISIBLE);
                     adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -262,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     radius_tb.setClickable(true);
                     Glide.with(context).load(R.drawable.favourite_off).fitCenter().into(f_tb);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
                     adapter = new recyclerViewAdapter(list,photoUrlList,reviewArrayList);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -287,6 +295,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     changeLocation();
     }
 
+    private void checkForPermissions() {
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            askforpermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            askforpermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+        }
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED){
+            askforpermission(new String[]{Manifest.permission.CALL_PHONE});
+        }
+    }
+
+    private void askforpermission(String[] permission) {
+        ActivityCompat.requestPermissions(this,permission,1);
+    }
+
     private void favourites(){
         Favourites fav = null;
         try {
@@ -301,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
             recyclerView.setLayoutManager(mLayoutManager);
+            //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -388,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     animation = AnimationUtils.loadAnimation(context, R.anim.slide_up);
                     animation.setDuration(440);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
                     adapter = new recyclerViewAdapter(searchList, searchPhotoUrlList, searchReviewArrayList);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -467,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onResponse(String response) {
                 try {
                     JSONObject obj = new JSONObject(response);
-                   //  Log.i("response", response);
+                    Log.i("response", response);
                     JSONObject j = obj.getJSONObject("result");
 
                     if(response.contains("OVER_QUERY_LIMIT")){
@@ -527,6 +553,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         k++;
                     }
                     types += ".";
+                    String f_types = types;
                     if (types.length() >= 25)
                         types = types.substring(0, 22) + "...";
                     if (t.length() >= 22) {
@@ -550,7 +577,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         e2++;
                         Log.i("e2", e2 + "");
                     }
-                    Restauraunt re = new Restauraunt(t, vicinity, String.valueOf(dou), ur, number, types, ltlg.latitude, ltlg.longitude, open_close, id);
+                    Restauraunt re = new Restauraunt(t, vicinity, String.valueOf(dou), ur, number, types, ltlg.latitude, ltlg.longitude, open_close, id,title,f_types,f_vicinity);
                     list.add(re);
 
                 } catch (JSONException e) {
@@ -598,12 +625,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setNestedScrollingEnabled(false);
                     bar.setVisibility(View.GONE);
+                    buffer.setVisibility(View.VISIBLE);
                     splash.setVisibility(View.GONE);
                     tomato.setVisibility(View.GONE);
                     appBarLayout.setVisibility(View.VISIBLE);
+
                     recyclerView.setVisibility(View.VISIBLE);
                     load_more_card_view.setVisibility(View.VISIBLE);
                     cardviewtoolbar.setVisibility(View.VISIBLE);
@@ -717,6 +747,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         if (a == local.url.length - 1)
                             a++;
                         Log.i("show this ", "\nplace id: " + obj.getString("place_id") + " and ");
+                        f_vicinity=vicinity;
                         if (vicinity.length() >= 23) {
                             vicinity = vicinity.substring(0, 23) + "...";
                         }

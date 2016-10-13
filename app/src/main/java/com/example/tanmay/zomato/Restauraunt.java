@@ -9,11 +9,11 @@ import java.io.Serializable;
  */
 public class Restauraunt implements Serializable {
 
-    private String name,vicinity,rating,ImageUrl,number,type,apiUrl, open_close,place_id;
+    private String name,vicinity,rating,ImageUrl,number,type, open_close,place_id, full_title, full_vicinity, full_types;
 
     private double lat, lng;
 
-    public Restauraunt(String n,String v,String r, String u,String num, String type,double lat, double lng ,String open_close, String id){
+    public Restauraunt(String n,String v,String r, String u,String num, String type,double lat, double lng ,String open_close, String id, String ft, String fv, String ftypes){
         name=n;
         vicinity=v;
         rating=r;
@@ -24,11 +24,13 @@ public class Restauraunt implements Serializable {
         this.lng=lng;
         this.open_close=open_close;
         this.place_id=id;
-
+        full_title=ft;
+        full_vicinity=fv;
+        full_types=ftypes;
     }
 
 
-    public String getapiUrl(){return apiUrl;}
+
     public String getName(){
         return name;
     }
@@ -48,5 +50,8 @@ public class Restauraunt implements Serializable {
     public double getLongitude(){return lng;}
     public String getOpen_close(){return open_close;}
     public String getPlace_id(){return place_id;}
+    public String getFull_title(){return full_title;}
+    public String getFull_vicinity(){return full_vicinity;}
+    public String getFull_types(){return full_types;}
   //  public LatLng getLtlg(){return ltlg;}
 }

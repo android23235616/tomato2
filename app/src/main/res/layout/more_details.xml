@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CardView="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        CardView:cardCornerRadius="5dp"
+        CardView:cardElevation="10dp"
+        CardView:contentPadding="3dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Full_name"
+                android:layout_gravity="center"
+                android:textSize="25dp"
+                android:padding="5dp"
+
+
+                android:textColor="#000000"
+                android:text="Kake De Dhaba"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/full_number"
+                android:text="9818702292"
+                android:textStyle="bold"
+                android:padding="9dp"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shaperating"
+                android:paddingTop="4dp"
+                android:textColor="#ffffff"
+                android:textSize="12dp"/>
+<LinearLayout
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/card_viewHotelPics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardCornerRadius="12dp"
+
+                >
+
+                <!--   Recycler View Item Row   -->
+                <LinearLayout
+
+                    android:layout_width="90dp"
+                    android:orientation="vertical"
+                    android:layout_height="90dp">
+
+
+                    <ImageView
+                        android:background="@drawable/background"
+                        android:id="@+id/full_pic"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+</LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/full_address"
+                android:textSize="15dp"
+                android:padding="5dp"
+                android:layout_marginTop="8dp"
+                android:textColor="#707B7C"
+                android:textAlignment="center"
+                android:text="101 tagore Road hostel, Minto Road Complex, New Delhi -110002"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/full_types"
+                android:textSize="13dp"
+                android:layout_marginTop="8dp"
+                android:textColor="#707B7C"
+                android:textStyle="italic"
+                android:textAlignment="center"
+                android:text="Spa, Pub, Bar, "
+                />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:CardView="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/cl"
-    android:layout_marginBottom="70dp"
-  >
+
+
+    >
 
     <android.support.v7.widget.CardView
         android:id="@+id/load_more_card_view"
         android:layout_width="match_parent"
+        CardView:cardElevation="10dp"
         android:layout_height="40dp">
         <LinearLayout
+            android:layout_below="@+id/cl"
+
             android:background="@drawable/ripple"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

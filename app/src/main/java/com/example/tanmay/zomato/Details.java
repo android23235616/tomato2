@@ -64,7 +64,7 @@ public class Details extends AppCompatActivity {
     reviewRecycler reviewAdapters;
     CardView reviewButton;
     static int reviewChecker = 0;
-    TextView expansion;
+    TextView expansion,f_name, f_add, f_number,f_types;
     Animation slide_down,slide_up;
     Intent intent;
     FloatingActionButton navigate;
@@ -72,6 +72,8 @@ public class Details extends AppCompatActivity {
     String open_closeText;
     float dX,dY;
     int lastAction;
+    ImageView f_pic;
+
     @Override
     protected void onCreate(Bundle saved) {
         super.onCreate(saved);
@@ -79,6 +81,11 @@ public class Details extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         url = new ArrayList<>();
         mainPhoto = null;
+        f_name = (TextView)findViewById(R.id.Full_name);
+        f_pic = (ImageView)findViewById(R.id.full_pic);
+        f_add = (TextView)findViewById(R.id.full_address);
+        f_number = (TextView)findViewById(R.id.full_number);
+        f_types = (TextView)findViewById(R.id.full_types);
         open_close = (TextView)findViewById(R.id.open_close);
         navigate = (FloatingActionButton)findViewById(R.id.navigate);
         reviewButton = (CardView) findViewById(R.id.reviewButton);
@@ -111,6 +118,10 @@ public class Details extends AppCompatActivity {
         final String vicinity1 = re.getVicinity();
         number.setText(re.getNumber());
         types.setText(re.getType());
+        f_types.setText(re.getFull_types());
+        f_add.setText(re.getFull_vicinity());
+        f_name.setText(re.getFull_title());
+        f_number.setText(re.getNumber());
         Random random = new Random();
         if(open_closeText.equals(true+"")){
             open_close.setText("OPEN");
@@ -123,6 +134,7 @@ public class Details extends AppCompatActivity {
         }
         vicinity.setText(vicinity1);
         Glide.with(pic.getContext()).load(re.getImageUrl()).thumbnail(0.01f).override(75, 90).centerCrop().crossFade().into(pic);
+        Glide.with(f_pic.getContext()).load(re.getImageUrl()).thumbnail(0.01f).override(75, 90).centerCrop().crossFade().into(f_pic);
         Glide.with(this).load(new localdatabase().
                 url[showRandomInteger(0, new localdatabase().url.length - 1, random)]).
                 override(getScreenWidth(), getPx(300)).centerCrop().
@@ -135,7 +147,13 @@ public class Details extends AppCompatActivity {
                 final LatLng ltlng = new LatLng(re.getLatitude(), re.getLongitude());
                  lat = ltlng.latitude;
                  lng = ltlng.longitude;
-                Toast.makeText(getApplicationContext(), "Location is " + lat + " " + lng, Toast.LENGTH_LONG).show();
+                Intent showMap = new Intent(Intent.ACTION_VIEW);
+                showMap.setData(Uri.parse("geo:0,0?q="+lat+","+lng));
+                try{
+                    startActivity(showMap);
+                }catch (Exception e){
+                    display(e.toString());
+                }
             }
         });
          intent = new Intent(Intent.ACTION_CALL);

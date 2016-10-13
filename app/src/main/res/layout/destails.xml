@@ -98,13 +98,13 @@ android:background="#CACFD2"
                <TextView
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:text="Past Orders"
+                   android:text="Details"
                    android:textStyle="bold"
                    android:textSize="14.5dp"
                    android:paddingLeft="10dp"
                    android:textColor="#979a9a"/>
 
-               <include layout="@layout/opening_hours"/>
+               <include layout="@layout/more_details"/>
 
                <TextView
                    android:layout_width="match_parent"
