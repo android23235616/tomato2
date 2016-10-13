@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+  >
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/cl"
 >
 <ImageView
     android:background="@drawable/splash"
@@ -43,32 +48,34 @@
                 android:id="@+id/toolbar"
 
                 app:layout_collapseMode="pin">
-                <LinearLayout
+                <FrameLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_gravity="center_vertical"
-                        android:id="@+id/popup"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/ic_keyboard_arrow_right_white_48dp"/>
-                    <EditText
-                        android:layout_width="260dp"
-                        android:layout_height="wrap_content"
-                        android:hint="search"
 
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Search"
                         android:id="@+id/search_bar"/>
 
-                    <ImageView
-                        android:id="@+id/search_button"
+                    <TextView
+                        android:id="@+id/new_location"
+                        android:padding="3dp"
+                        android:textStyle="bold"
+                        android:textSize="15dp"
+                        android:background="@drawable/shaper_change_location"
                         android:layout_gravity="center"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/search"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:text="Current Location"/>
 
-                </LinearLayout>
+
+
+
+
+                </FrameLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -99,8 +106,7 @@
 
     </android.support.v7.widget.RecyclerView>
 
-<include layout="@layout/load_more"
-    />
+
 </LinearLayout>
 
 
@@ -116,8 +122,10 @@
 
         android:layout_marginBottom="70dp"
         />
+
     <include layout="@layout/card_view_toolbar"
-       />
-
-
+        />
 </android.support.design.widget.CoordinatorLayout>
+    <include layout="@layout/load_more"
+        />
+</RelativeLayout>

@@ -3,6 +3,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -14,6 +15,7 @@ import android.os.Handler;
 
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,15 +54,20 @@ import com.android.volley.toolbox.StringRequest;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
 import java.io.IOException;
@@ -75,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     localdatabase local;
     RequestQueue requestQueue;
     static int radius = 1000;
+    final int PLACE_PICKER_REQUEST=4136;
     List<Restauraunt> list = new ArrayList<>();
     Handler viewHierchy;
     RecyclerView recyclerView;
@@ -82,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     recyclerViewAdapter adapter;
     CollapsingToolbarLayout cToolbar;
     int favourite_checker=0;
-    ImageView tomato, Search_button, s_tb, r_tb, f_tb, radius_tb;
-
+    ImageView tomato, s_tb, r_tb, f_tb, radius_tb;
+    CardView cardviewtoolbar;
     EditText search;
     static int dataLength;
     AppBarLayout appBarLayout;
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Handler handler;
     public static Context context;
     Location l=null;
-    ImageView pop_up;
+
     GoogleApiClient api=null;
     int e1 = 0, e2 = 0, e3 = 0;
     List<photoUrl> photoUrlList;
@@ -102,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     int finalSize;
     ProgressBar bar;
     // File f;
+    TextView change_location;
     ViewPager pager;
     boolean gate = false;
     ImageButton next, back;
@@ -127,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         s_tb = (ImageView)findViewById(R.id.search_tb);
         r_tb = (ImageView)findViewById(R.id.refresh_tb);
         f_tb = (ImageView)findViewById(R.id.fav_tb);
+        change_location = (TextView)findViewById(R.id.new_location);
         radius_tb = (ImageView)findViewById(R.id.radius_tb);
-
+        cardviewtoolbar = (CardView)findViewById(R.id.cardviewtoolbar);
+        cardviewtoolbar.setVisibility(View.GONE);
         reviewArrayList = new ArrayList<>();
         cToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
         context = this;
@@ -138,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         photoUrlList = new ArrayList<>();
         local = new localdatabase();
         pageradater = new pagerAdapter(local);
-        pop_up = (ImageView) findViewById(R.id.popup);
+
         tomato = (ImageView) findViewById(R.id.tomato);
         next = (ImageButton) findViewById(R.id.right_arrow);
-        Search_button = (ImageView) findViewById(R.id.search_button);
+
         search = (EditText) findViewById(R.id.search_bar);
         search.setVisibility(View.INVISIBLE);
         back = (ImageButton) findViewById(R.id.left_arrow);
@@ -187,117 +198,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     pager.setCurrentItem(current);
             }
         });
-        Search_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (search_checker % 2 != 0) {
-                    search.setVisibility(View.VISIBLE);
-                } else {
-                    search.setVisibility(View.INVISIBLE);
-                    adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                }
-                search_checker++;
-            }
-        });
         addTextListener();
 
-        pop_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(context, v);
-                MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.menu, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.get_more) {
-                            if (loaderLooper >= 3) {
-                                Toast.makeText(context, "No more restaurants", Toast.LENGTH_LONG).show();
-                            } else {
-                                bar.setVisibility(View.VISIBLE);
 
-                                fetchData(sbMethod(loaderLooper,true));
-                            }
-                            return true;
-                        } else if (item.getItemId() == R.id.favouritemenu) {
-                            Favourites fav = null;
-                            try {
-                                fav = adapter.getFavourites();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            if (fav != null) {
-                                adapter = new recyclerViewAdapter(fav.getList(), fav.getP(), fav.getArr());
 
-                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-                                recyclerView.setLayoutManager(mLayoutManager);
-                                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            }
-                        } else if (item.getItemId() == R.id.radius) {
-                            builder = new AlertDialog.Builder(context);
-                            View v = LayoutInflater.from(context).inflate(R.layout.seekbar, null);
-                            builder.setView(v);
-                            builder.setCancelable(true);
-                            final SeekBar sb = (SeekBar) v.findViewById(R.id.seekbar);
-                            final TextView rad = (TextView) v.findViewById(R.id.radiusText);
-                            rad.setText(radius + " Metres");
-                            sb.setProgress(radius / 1000);
-                            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                                @Override
-                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                    radius = 1000 * (progress + 1);
-                                    rad.setText(1000 * (progress + 1) + " Metres");
-                                }
-
-                                @Override
-                                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                }
-
-                                @Override
-                                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                }
-                            });
-
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    loaderLooper = 1;
-                                    bar.setVisibility(View.VISIBLE);
-                                    list.clear();
-                                    photoUrlList.clear();
-                                    reviewArrayList.clear();
-                                    fetchData(sbMethod(loaderLooper,false));
-                                    adapter.notifyDataSetChanged();
-                                    builder.create().dismiss();
-                                }
-                            });
-                            builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    radius = 1000;
-                                    builder.create().cancel();
-                                }
-                            });
-                            builder.show();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
     load_more_card_view.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -308,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } else {
 
                 load_more_progress_bar.setVisibility(View.VISIBLE);
-                fetchData(sbMethod(loaderLooper,true));
+                fetchData(sbMethod(loaderLooper, true));
             }
 
         }
@@ -317,8 +222,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 if (search_checker % 2 != 0) {
+                    change_location.setVisibility(View.GONE);
                     search.setVisibility(View.VISIBLE);
                 } else {
+                    change_location.setVisibility(View.VISIBLE);
                     search.setVisibility(View.INVISIBLE);
                     adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -369,6 +276,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 new_radius();
             }
         });
+
+    change_location.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            get_new_location();
+        }
+    });
 
     changeLocation();
     }
@@ -523,25 +437,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void initCollapsingToolbar() {
-        cToolbar.setTitle("");
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
 
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + i == 0) {
-                    cToolbar.setTitle("Tomato");
-                    isShow = true;
-                } else if (isShow) {
-                    cToolbar.setTitle("");
-                    isShow = false;
-                }
-            }
-        });
+        tb.setTitle("Current Location");
+         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+             boolean isShow = false;
+             int scrollRange = -1;
+
+             @Override
+             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                 if (scrollRange == -1) {
+                     scrollRange = appBarLayout.getTotalScrollRange();
+                 }
+                 if (scrollRange + i == 0) {
+                     cToolbar.setTitle("Tomato");
+                     isShow = true;
+                 } else if (isShow) {
+                     cToolbar.setTitle("");
+                     isShow = false;
+                 }
+             }
+         });
     }
 
     String t;
@@ -691,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     appBarLayout.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     load_more_card_view.setVisibility(View.VISIBLE);
-
+                    cardviewtoolbar.setVisibility(View.VISIBLE);
                     load_more_progress_bar.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                 }
@@ -864,7 +779,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (gate && !(page_token.equals("loader"))&&trigger) {
             sb.append("&pagetoken=" + page_token);
         }else{
-            display("No more restaurants to be displayed");
+           // display("No more restaurants to be displayed");
         }
         Log.d("Map", "api: " + sb.toString());
 
@@ -963,5 +878,42 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void errorLog(String s){
         Log.e("error",s);
     }
-    
+
+    private void get_new_location() {
+       if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED
+               &&ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+           display("Location Permissions have been denied");
+           ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+           ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
+       }else{
+           PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+           try {
+               startActivityForResult(intentBuilder.build(this),PLACE_PICKER_REQUEST);
+           } catch (GooglePlayServicesRepairableException e) {
+               e.printStackTrace();
+               display(e.toString());
+           } catch (GooglePlayServicesNotAvailableException e) {
+               e.printStackTrace();
+               display(e.toString());
+           }
+       }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if(resultCode==RESULT_OK&&requestCode==PLACE_PICKER_REQUEST){
+           Place place = PlacePicker.getPlace(data,this);
+           String name = (String)place.getName();
+           if(name.length()>20)
+               name = name.substring(0,20);
+           change_location.setText(name);
+           current_lat = place.getLatLng().latitude;
+           current_long = place.getLatLng().longitude;
+           loaderLooper=1;
+           list.clear();
+           photoUrlList.clear();
+           reviewArrayList.clear();
+           fetchData(sbMethod(loaderLooper,false));
+       }
+    }
 }
