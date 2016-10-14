@@ -110,7 +110,17 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Offline Mode"
+        android:textColor="#EC7063"
+        android:textSize="15dp"
+        android:layout_gravity="center|bottom"
+        android:id="@+id/offline_mode"
+        android:layout_marginBottom="150dp"
+        />
 
 
     <ProgressBar

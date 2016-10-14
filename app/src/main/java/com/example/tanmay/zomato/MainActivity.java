@@ -79,11 +79,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     EditText search;
     static int dataLength;
     AppBarLayout appBarLayout;
-
+    TextView offline_mode;
     Handler handler;
     public static Context context;
     Location l=null;
-
     GoogleApiClient api=null;
     int e1 = 0, e2 = 0, e3 = 0;
     List<photoUrl> photoUrlList;
@@ -105,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     static int loaderLooper = 1;
     public String f_vicinity;
     AlertDialog.Builder builder;
-    // TextView t;
     Toolbar tb;
     CardView load_more_card_view;
     ProgressBar load_more_progress_bar;
@@ -122,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         s_tb = (ImageView)findViewById(R.id.search_tb);
         r_tb = (ImageView)findViewById(R.id.refresh_tb);
         f_tb = (ImageView)findViewById(R.id.fav_tb);
+        offline_mode = (TextView)findViewById(R.id.offline_mode);
         change_location = (TextView)findViewById(R.id.new_location);
         radius_tb = (ImageView)findViewById(R.id.radius_tb);
         cardviewtoolbar = (CardView)findViewById(R.id.cardviewtoolbar);
@@ -136,10 +135,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         photoUrlList = new ArrayList<>();
         local = new localdatabase();
         pageradater = new pagerAdapter(local);
-
         tomato = (ImageView) findViewById(R.id.tomato);
         next = (ImageButton) findViewById(R.id.right_arrow);
-
         search = (EditText) findViewById(R.id.search_bar);
         search.setVisibility(View.INVISIBLE);
         back = (ImageButton) findViewById(R.id.left_arrow);
@@ -151,12 +148,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         tb.setTitle("Tomato");
         pager = (ViewPager) findViewById(R.id.view_pager);
         appBarLayout.setVisibility(View.GONE);
-//
         splash = (ImageView) findViewById(R.id.splash);
-       // splash.setVisibility(View.GONE);
         initCollapsingToolbar();
         if(api==null)
-        api = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
+            api = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         api.connect();
         bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setIndeterminate(true);
@@ -214,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 } else {
                     change_location.setVisibility(View.VISIBLE);
                     search.setVisibility(View.INVISIBLE);
-                    adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList);
+                    adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList,context);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
                     recyclerView.setAdapter(adapter);
@@ -251,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Glide.with(context).load(R.drawable.favourite_off).fitCenter().into(f_tb);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
-                    adapter = new recyclerViewAdapter(list,photoUrlList,reviewArrayList);
+                    adapter = new recyclerViewAdapter(list,photoUrlList,reviewArrayList,context);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -273,6 +268,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     });
 
+     offline_mode.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             offline_favourites();
+         }
+     });
     changeLocation();
     }
 
@@ -283,13 +284,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             askforpermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
         }
-        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED){
-            askforpermission(new String[]{Manifest.permission.CALL_PHONE});
-        }
+
     }
 
     private void askforpermission(String[] permission) {
         ActivityCompat.requestPermissions(this,permission,1);
+    }
+
+    private void offline_favourites(){
+        Favourites fav = null;
+        offline_feature offlineadapter = new offline_feature(context);
+        try{
+            fav = offlineadapter.getofflineFavourites();
+        }catch(Exception e){
+
+            e.printStackTrace();
+            display(e.toString());
+        }
+        if(fav!=null){
+            adapter = new recyclerViewAdapter(fav.getList(), fav.getP(), fav.getArr(),this);
+
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(mLayoutManager);
+            //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
+            load_more_card_view.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
+            offline_mode.setVisibility(View.GONE);
+            bar.setVisibility(View.GONE);
+            buffer.setVisibility(View.VISIBLE);
+            splash.setVisibility(View.GONE);
+            tomato.setVisibility(View.GONE);
+            appBarLayout.setVisibility(View.VISIBLE);
+            offline_mode.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+
+
+            load_more_progress_bar.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     private void favourites(){
@@ -302,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
         if (fav != null) {
-            adapter = new recyclerViewAdapter(fav.getList(), fav.getP(), fav.getArr());
+            adapter = new recyclerViewAdapter(fav.getList(), fav.getP(), fav.getArr(),context);
 
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
             recyclerView.setLayoutManager(mLayoutManager);
@@ -310,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+
         }
     }
 
@@ -395,7 +431,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     animation.setDuration(440);
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     //oration(         new HorizontalDividerItemDecoration.Builder(context)                 .color(Color.RED)                 .sizeResId(1)                 .marginResId(0, 0)                 .build());
-                    adapter = new recyclerViewAdapter(searchList, searchPhotoUrlList, searchReviewArrayList);
+                    adapter = new recyclerViewAdapter(searchList, searchPhotoUrlList, searchReviewArrayList,context);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     recyclerView.startAnimation(animation);
@@ -602,7 +638,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             viewHierchy.post(new Runnable() {
                 @Override
                 public void run() {
-                    adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList);
+                    adapter = new recyclerViewAdapter(list, photoUrlList, reviewArrayList,context);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -614,7 +650,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     splash.setVisibility(View.GONE);
                     tomato.setVisibility(View.GONE);
                     appBarLayout.setVisibility(View.VISIBLE);
-
+                    offline_mode.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     load_more_card_view.setVisibility(View.VISIBLE);
                     cardviewtoolbar.setVisibility(View.VISIBLE);

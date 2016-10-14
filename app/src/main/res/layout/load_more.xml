@@ -12,6 +12,7 @@
         android:id="@+id/load_more_card_view"
         android:layout_width="match_parent"
         CardView:cardElevation="10dp"
+        android:layout_marginBottom="3dp"
         android:layout_height="40dp">
         <LinearLayout
             android:layout_below="@+id/cl"

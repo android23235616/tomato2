@@ -41,10 +41,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  */
 public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapter.MyViewHolderClass> {
     Restauraunt re;
-  // static FileOutputStream fos = null;
-   //static ObjectOutputStream os=null;
-   //static FileInputStream fis = null;
-   // static ObjectInputStream ois=null;
+    private Context context;
     List<Restauraunt> list, Flist=new ArrayList<>();
     List<photoUrl> photoUrlList,FphotoUrlList=new ArrayList<>();
     List<reviewArray> arrays, Farrays=new ArrayList<>();
@@ -56,14 +53,15 @@ public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapte
     final String nullRating="98187022332";
     SharedPreferences prefs;
     String favourite_status= "";
-    String Preferences = "MyPrefs9";
+    public final static String Preferences = "MyPrefs9";
     SharedPreferences.Editor edit;
     static int fileCounter=0;
-    public  recyclerViewAdapter(List<Restauraunt> list, List<photoUrl> p, List<reviewArray> arr){
+    public  recyclerViewAdapter(List<Restauraunt> list, List<photoUrl> p, List<reviewArray> arr,Context parent){
         this.list = list;
         photoUrlList = p;
         arrays=arr;
-        Log.i("adapter", p.size()+" "+photoUrlList.size());
+        context=parent;
+       // Log.i("adapter", p.size()+" "+photoUrlList.size());
     }
 
 
@@ -213,8 +211,13 @@ public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapte
     public Favourites getFavourites() throws IOException, ClassNotFoundException {
         String s = prefs.getString("main_object","Not Available");
         displayLog(s);
-        Favourites f = gson.fromJson(s,Favourites.class);
-        return f;
+        if(s.equals("Not Available")){
+            Toast.makeText(context,"You still Don't have any Favourites",Toast.LENGTH_LONG).show();
+            return null;
+        }else {
+            Favourites f = gson.fromJson(s, Favourites.class);
+            return f;
+        }
     }
 
     @Override
