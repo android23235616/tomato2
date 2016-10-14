@@ -1,5 +1,4 @@
 package com.example.tanmay.zomato;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.Manifest;
@@ -7,14 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
-
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -32,20 +25,16 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,7 +42,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -61,23 +49,16 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ViewPager.OnPageChangeListener{
     final public static String api_key = "AIzaSyCWpiZ6BlebD3U8BVfyoGyIIRagibTUWNQ";
@@ -98,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     EditText search;
     static int dataLength;
     AppBarLayout appBarLayout;
-    // ChompProgressView chompProgressView = (ChompProgressView) findViewById(R.id.progressBar);
+
     Handler handler;
     public static Context context;
     Location l=null;
@@ -523,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         //e.printStackTrace();
                         e3++;
                         Log.i("e3", e3 + "");
-                        String[] nullPhoto = {"http://www.designofsignage.com/application/symbol/building/image/600x600/no-photo.jpg"};
+                        String[] nullPhoto = {"http://www.kalahandi.info/wp-content/uploads/2016/05/sorry-image-not-available.png"};
                         photoUrl nullPic = new photoUrl(nullPhoto, 1);
                         photoUrlList.add(nullPic);
                         // display("Photos don't exist "+e.toString());

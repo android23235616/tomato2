@@ -40,7 +40,7 @@
 
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/abc_action_bar_default_height_material"
                 android:id="@+id/toolbar"
 
                 app:layout_collapseMode="pin">
@@ -57,7 +57,7 @@
 
                     <TextView
                         android:id="@+id/new_location"
-                        android:padding="8dp"
+                        android:padding="10dp"
                         android:textStyle="bold"
                         android:textSize="15dp"
                         android:background="@drawable/shaper_change_location"
@@ -65,9 +65,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#ffffff"
-                        android:text="Current Location"/>
+                        android:text="All Restaurants Near You"/>
+
                 </FrameLayout>
             </android.support.v7.widget.Toolbar>
+
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -106,6 +109,8 @@
 
 
     </android.support.v4.widget.NestedScrollView>
+
+
 
 
     <ProgressBar

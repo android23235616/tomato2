@@ -118,8 +118,8 @@ public class Details extends AppCompatActivity {
         final String vicinity1 = re.getVicinity();
         number.setText(re.getNumber());
         types.setText(re.getType());
-        f_types.setText(re.getFull_types());
-        f_add.setText(re.getFull_vicinity());
+        f_add.setText(re.getFull_types());
+        f_types.setText(re.getFull_vicinity());
         f_name.setText(re.getFull_title());
         f_number.setText(re.getNumber());
         Random random = new Random();
