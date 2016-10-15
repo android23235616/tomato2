@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQeueu();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         //fetch data with current location
-        fetchData(sbMethod(loaderLooper,false));
+        //fetchData(sbMethod(loaderLooper,false));
         gate = true;
         recyclerView.setVisibility(View.GONE);
         pager.setAdapter(pageradater);
