@@ -150,7 +150,13 @@ public class Details extends AppCompatActivity {
                 Intent showMap = new Intent(Intent.ACTION_VIEW);
                 showMap.setData(Uri.parse("geo:0,0?q="+lat+","+lng));
                 try{
-                    startActivity(showMap);
+                  //  startActivity(showMap);
+
+                    Intent i = new Intent(v.getContext(), showMap.class);
+                    i.putExtra("lat",lat);
+                    i.putExtra("lng",lng);
+                    startActivity(i);
+
                 }catch (Exception e){
                     display(e.toString());
                 }
@@ -230,10 +236,10 @@ public class Details extends AppCompatActivity {
             }
         });
         
-        navigate.setOnTouchListener(new View.OnTouchListener() {
+      /*  navigate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
+                /*switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         dX = navigate.getX() - event.getRawX();
                         dY = navigate.getY() - event.getRawY();
@@ -261,7 +267,18 @@ public class Details extends AppCompatActivity {
                 }
                 return true;
             }
-        });
+        });*/
+
+      navigate.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent i = new Intent(v.getContext(), showMap.class);
+              i.putExtra("lat",lat);
+              i.putExtra("lng",lng);
+              startActivity(i);
+          }
+      });
+
     }
 
     public int getPx(int r1) {

@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (loaderLooper >= 3) {
 
-                Toast.makeText(context, "No more restaurants", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "No more places", Toast.LENGTH_LONG).show();
             } else {
 
                 load_more_progress_bar.setVisibility(View.VISIBLE);
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     change_location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            get_new_location();
+        //    get_new_location();
         }
     });
 
@@ -815,7 +815,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         sb.append("location=" + current_lat + "," + current_long);
         sb.append("&radius="+radius);
-        sb.append("&types=" + "restaurant");
+       // sb.append("&types=" + "hospital");
         sb.append("&sensor=false");
         sb.append("&hasNextPage=true&nextPage()=true");
         sb.append("&key=" + api_key);

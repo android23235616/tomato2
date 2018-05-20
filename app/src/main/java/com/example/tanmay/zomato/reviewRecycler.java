@@ -37,9 +37,9 @@ public class reviewRecycler extends RecyclerView.Adapter<reviewRecycler.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
       review_holder reviewObject = holderArray[holder.getAdapterPosition()];
-        String name, profile_pic,mainText;
+        final String name, profile_pic,mainText;
         double rating;
         long unixStamp;
         name = reviewObject.getAuthor_name();
@@ -47,7 +47,26 @@ public class reviewRecycler extends RecyclerView.Adapter<reviewRecycler.MyViewHo
         mainText = reviewObject.getMainText();
         rating = reviewObject.getRating();
         unixStamp = reviewObject.getUnix_timestamp();
-        holder.actual_review.setText(mainText);
+
+       // holder.actual_review.setText(mainText);
+
+        if(mainText.length()>25){
+            holder.actual_review.setText(mainText.substring(0,24)+"...");
+
+        }else{
+
+            holder.actual_review.setText(mainText);
+
+        }
+
+        holder.actual_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.actual_review.setText(mainText);
+            }
+        });
+
+        //holder.actual_review.setText(mainText);
         holder.rating.setText(rating + "");
         Glide.with(holder.profilePic.getContext()).load("https:"+profile_pic).centerCrop().crossFade().thumbnail(0.1f).into(holder.profilePic);
         holder.name.setText(name);
